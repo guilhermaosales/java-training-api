@@ -1,17 +1,19 @@
 package br.com.training.controller;
 
-import javax.validation.Valid;
-
+import br.com.training.model.User;
 import br.com.training.service.UserService;
-import org.springframework.web.bind.annotation.*;
+import br.com.training.service.request.UserForm;
+import br.com.training.service.response.UserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
-import br.com.training.model.User;
-
+import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
+@Validated
 @RestController
 @RestControllerAdvice
 @RequestMapping("/users")
@@ -21,33 +23,45 @@ public class UserController {
 	private UserService userService;
 
 	@PostMapping
-	@ResponseStatus(HttpStatus.CREATED)
-	public User createUser(@RequestBody @Valid User user) {
-		return userService.save(user);
+	public ResponseEntity<User> createUser(@RequestBody @Valid UserForm user) {
+		User preparedUser = userService.save(user.convertToObj());
+		return new ResponseEntity<>(UserResponse.convertToDTO(preparedUser), HttpStatus.CREATED);
 	}
 
 	@GetMapping (value = "/{cpf}")
-	@ResponseStatus(HttpStatus.OK)
-    public Optional<User> getUser (@PathVariable String cpf) {
-        return userService.findByCpf(cpf);
+	public ResponseEntity<User> getUser(@PathVariable String cpf) {
+		User foundUser = userService.findByCpf(cpf);
+		return new ResponseEntity<>(foundUser, HttpStatus.OK);
     }
 
     @GetMapping
-    @ResponseStatus(HttpStatus.ACCEPTED)
-	public List<User> getAllUsers () {
-		return userService.listAll();
+	public ResponseEntity<List<User>> getAllUsers() {
+		List<User> foundUsers = userService.listAll();
+		return new ResponseEntity<>(foundUsers, HttpStatus.OK);
 	}
 
     @PutMapping(value = "/{cpf}")
-	@ResponseStatus(HttpStatus.OK)
-	public User updateUser (@RequestBody @Valid User user, @PathVariable String cpf) {
-		return userService.updateByCpf(user, cpf);
+	public ResponseEntity<User> updateUser(@RequestBody @Valid UserForm user, @PathVariable String cpf) {
+		User foundUser = userService.findByCpf(cpf);
+		if (foundUser != null) {
+			foundUser.setName(user.getName());
+			foundUser.setCpf(user.getCpf());
+			foundUser.setEmail(user.getEmail());
+			foundUser.setBirthDate(user.getBirthDate());
+			User newUser = userService.save(foundUser);
+			return new ResponseEntity<>(UserResponse.convertToDTO(newUser), HttpStatus.OK);
+		}
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 
 	@DeleteMapping(value = "/{cpf}")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void updateUser (@PathVariable String cpf) {
-		userService.deleteByCpf(cpf);
+	public ResponseEntity<Void> updateUser(@PathVariable String cpf) {
+		User foundUser = userService.findByCpf(cpf);
+		if (foundUser != null) {
+			userService.deleteByCpf(cpf);
+			return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 	}
 
 }

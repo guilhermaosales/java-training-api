@@ -1,17 +1,13 @@
 package br.com.training.model;
 
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
-import org.springframework.core.convert.converter.Converter;
-import org.springframework.stereotype.Component;
 
 @Entity
 public class User implements Serializable {
@@ -33,6 +29,27 @@ public class User implements Serializable {
 
 	@Column(nullable = false)
 	private LocalDate birthDate;
+
+	public User () {
+		// NTD
+	}
+
+	public User(@NotBlank String name, @NotBlank String email, String cpf, LocalDate birthDate) {
+		super();
+		this.name = name;
+		this.email = email;
+		this.cpf = cpf;
+		this.birthDate = birthDate;
+	}
+
+	public User(Long id, String name, String email, String cpf, LocalDate birthDate) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.email = email;
+		this.cpf = cpf;
+		this.birthDate = birthDate;
+	}
 
 	@Component
 	public class LocalDateSpringConverter implements Converter<String, LocalDate> {
