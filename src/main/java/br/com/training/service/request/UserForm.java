@@ -1,27 +1,47 @@
 package br.com.training.service.request;
 
 import br.com.training.model.User;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.br.CPF;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class UserForm {
+public class UserForm implements Serializable  {
 
-    @NotEmpty
-    @Size(min = 2, message = "user name should have at least {min} characters")
+    private static final long serialVersionUID = 1L;
+
+    @NotBlank
+    @Size(min = 3, max = 45, message = "user name should have at least {min} characters and at maximum {max}.")
     private String name;
 
-    @NotEmpty
-    @Email
+    @NotBlank
+    @Email(message = "email must be filled correctly.")
     private String email;
 
+    @NotBlank
     @CPF
     private String cpf;
     private LocalDate birthDate;
+
+    public UserForm() {
+        // NTD
+    }
+
+    public UserForm(String name, String email, String cpf, LocalDate birthDate) {
+        this.name = name;
+        this.email = email;
+        this.cpf = cpf;
+        this.birthDate = birthDate;
+    }
+
+    public User convertToObj() {
+        return new User(this);
+    }
 
     public String getName() {
         return name;
@@ -55,11 +75,4 @@ public class UserForm {
         this.birthDate = birthDate;
     }
 
-    public User convertToObj() {
-        return new User(name, email, cpf, birthDate);
-    }
-
-//    public isCpfValid(String cpf) {
-//
-//    }
 }

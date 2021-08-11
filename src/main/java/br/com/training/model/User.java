@@ -1,10 +1,11 @@
 package br.com.training.model;
 
+import br.com.training.service.request.UserForm;
+import br.com.training.service.response.UserResponse;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -34,14 +35,6 @@ public class User implements Serializable {
 		// NTD
 	}
 
-	public User(@NotBlank String name, @NotBlank String email, String cpf, LocalDate birthDate) {
-		super();
-		this.name = name;
-		this.email = email;
-		this.cpf = cpf;
-		this.birthDate = birthDate;
-	}
-
 	public User(Long id, String name, String email, String cpf, LocalDate birthDate) {
 		super();
 		this.id = id;
@@ -49,6 +42,17 @@ public class User implements Serializable {
 		this.email = email;
 		this.cpf = cpf;
 		this.birthDate = birthDate;
+	}
+
+	public User(UserForm userForm) {
+		name = userForm.getName();
+		email = userForm.getEmail();
+		cpf = userForm.getCpf();
+		birthDate = userForm.getBirthDate();
+	}
+
+	public UserResponse convertToDTO() {
+		return new UserResponse(this);
 	}
 
 	@Component

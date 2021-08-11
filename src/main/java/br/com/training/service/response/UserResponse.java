@@ -1,23 +1,36 @@
 package br.com.training.service.response;
 
 import br.com.training.model.User;
+import br.com.training.service.request.UserForm;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class UserResponse {
+public class UserResponse implements Serializable {
 
-    private Long id;
+    private static final long serialVersionUID = 1L;
+
     private String name;
     private String email;
     private String cpf;
     private LocalDate birthDate;
 
-    public Long getId() {
-        return id;
+    public UserResponse() {
+        // NTD
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public UserResponse(String name, String email, String cpf, LocalDate birthDate) {
+        this.name = name;
+        this.email = email;
+        this.cpf = cpf;
+        this.birthDate = birthDate;
+    }
+
+    public UserResponse(User user) {
+        name = user.getName();
+        email = user.getEmail();
+        cpf =  user.getCpf();
+        birthDate = user.getBirthDate();
     }
 
     public String getName() {
@@ -52,11 +65,4 @@ public class UserResponse {
         this.birthDate = birthDate;
     }
 
-    public UserResponse() {
-
-    }
-
-    public static User convertToDTO(User user) {
-        return new User(user.getId(), user.getName(), user.getCpf(), user.getEmail(), user.getBirthDate());
-    }
 }
