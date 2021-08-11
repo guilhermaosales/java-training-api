@@ -1,17 +1,23 @@
 package br.com.training.controller;
 
-import javax.validation.Valid;
-
+import br.com.training.model.User;
 import br.com.training.service.UserService;
-import org.springframework.web.bind.annotation.*;
+import br.com.training.service.request.UserForm;
+import br.com.training.service.response.UserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.*;
 
-import br.com.training.model.User;
-
+import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
+@Validated
 @RestController
 @RestControllerAdvice
 @RequestMapping("/users")
@@ -21,33 +27,36 @@ public class UserController {
 	private UserService userService;
 
 	@PostMapping
-	@ResponseStatus(HttpStatus.CREATED)
-	public User createUser(@RequestBody @Valid User user) {
-		return userService.save(user);
+	public ResponseEntity<UserResponse> createUser(@RequestBody @Valid UserForm user) {
+		UserResponse preparedUser = userService.save(user);
+		return new ResponseEntity<>(preparedUser, HttpStatus.CREATED);
 	}
 
 	@GetMapping (value = "/{cpf}")
-	@ResponseStatus(HttpStatus.OK)
-    public Optional<User> getUser (@PathVariable String cpf) {
-        return userService.findByCpf(cpf);
+	public ResponseEntity<UserResponse> getUser(@PathVariable String cpf) {
+		UserResponse foundUser = userService.findByCpf(cpf);
+		return new ResponseEntity<>(foundUser, HttpStatus.OK);
     }
 
     @GetMapping
-    @ResponseStatus(HttpStatus.ACCEPTED)
-	public List<User> getAllUsers () {
+	@ResponseStatus(HttpStatus.OK)
+	public List<UserResponse> getAllUsers() {
 		return userService.listAll();
 	}
 
     @PutMapping(value = "/{cpf}")
-	@ResponseStatus(HttpStatus.OK)
-	public User updateUser (@RequestBody @Valid User user, @PathVariable String cpf) {
-		return userService.updateByCpf(user, cpf);
+	public ResponseEntity<UserResponse> updateUser(@RequestBody @Valid UserForm user, @PathVariable String cpf) {
+		UserResponse foundUser = userService.update(user, cpf);
+		return new ResponseEntity<>(foundUser, HttpStatus.OK);
 	}
 
 	@DeleteMapping(value = "/{cpf}")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void updateUser (@PathVariable String cpf) {
-		userService.deleteByCpf(cpf);
+	public ResponseEntity<Void> deleteUser(@PathVariable String cpf) {
+		UserResponse foundUser = userService.findByCpf(cpf);
+		if (foundUser != null) {
+			userService.deleteByCpf(cpf);
+			return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 	}
-
 }
