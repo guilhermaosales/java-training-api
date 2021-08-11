@@ -27,58 +27,36 @@ public class UserController {
 	private UserService userService;
 
 	@PostMapping
-	public ResponseEntity<User> createUser(@RequestBody @Valid UserForm user) {
-		User preparedUser = userService.save(user.convertToObj());
-		return new ResponseEntity<>(UserResponse.convertToDTO(preparedUser), HttpStatus.CREATED);
+	public ResponseEntity<UserResponse> createUser(@RequestBody @Valid UserForm user) {
+		UserResponse preparedUser = userService.save(user);
+		return new ResponseEntity<>(preparedUser, HttpStatus.CREATED);
 	}
 
 	@GetMapping (value = "/{cpf}")
-	public ResponseEntity<User> getUser(@PathVariable String cpf) {
-		User foundUser = userService.findByCpf(cpf);
+	public ResponseEntity<UserResponse> getUser(@PathVariable String cpf) {
+		UserResponse foundUser = userService.findByCpf(cpf);
 		return new ResponseEntity<>(foundUser, HttpStatus.OK);
     }
 
     @GetMapping
-	public ResponseEntity<List<User>> getAllUsers() {
-		List<User> foundUsers = userService.listAll();
-		return new ResponseEntity<>(foundUsers, HttpStatus.OK);
+	@ResponseStatus(HttpStatus.OK)
+	public List<UserResponse> getAllUsers() {
+		return userService.listAll();
 	}
 
     @PutMapping(value = "/{cpf}")
-	public ResponseEntity<User> updateUser(@RequestBody @Valid UserForm user, @PathVariable String cpf) {
-		User foundUser = userService.findByCpf(cpf);
-		if (foundUser != null) {
-			foundUser.setName(user.getName());
-			foundUser.setCpf(user.getCpf());
-			foundUser.setEmail(user.getEmail());
-			foundUser.setBirthDate(user.getBirthDate());
-			User newUser = userService.save(foundUser);
-			return new ResponseEntity<>(UserResponse.convertToDTO(newUser), HttpStatus.OK);
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	public ResponseEntity<UserResponse> updateUser(@RequestBody @Valid UserForm user, @PathVariable String cpf) {
+		UserResponse foundUser = userService.update(user, cpf);
+		return new ResponseEntity<>(foundUser, HttpStatus.OK);
 	}
 
 	@DeleteMapping(value = "/{cpf}")
-	public ResponseEntity<Void> updateUser(@PathVariable String cpf) {
-		User foundUser = userService.findByCpf(cpf);
+	public ResponseEntity<Void> deleteUser(@PathVariable String cpf) {
+		UserResponse foundUser = userService.findByCpf(cpf);
 		if (foundUser != null) {
 			userService.deleteByCpf(cpf);
 			return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 		}
 		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 	}
-
-	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public Map<String, String> handleValidationExceptions(
-			MethodArgumentNotValidException ex) {
-		Map<String, String> errors = new HashMap<>();
-		ex.getBindingResult().getAllErrors().forEach((error) -> {
-			String fieldName = ((FieldError) error).getField();
-			String errorMessage = error.getDefaultMessage();
-			errors.put(fieldName, errorMessage);
-		});
-		return errors;
-	}
-
 }
