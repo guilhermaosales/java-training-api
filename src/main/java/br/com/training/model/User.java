@@ -1,7 +1,7 @@
 package br.com.training.model;
 
-import br.com.training.service.request.UserForm;
-import br.com.training.service.response.UserResponse;
+import br.com.training.dto.request.UserForm;
+import br.com.training.dto.response.UserResponse;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
