@@ -1,21 +1,16 @@
 package br.com.training.controller;
 
-import br.com.training.model.User;
+import br.com.training.dto.request.UserForm;
+import br.com.training.dto.response.UserResponse;
 import br.com.training.service.UserService;
-import br.com.training.service.request.UserForm;
-import br.com.training.service.response.UserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Validated
 @RestController
