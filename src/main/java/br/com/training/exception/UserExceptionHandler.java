@@ -1,6 +1,7 @@
 package br.com.training.exception;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -21,13 +22,7 @@ public class UserExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public UserExceptionResponse methodArgumentNotValid(MethodArgumentNotValidException ex, HttpServletRequest req) {
 
-        List<String> errors = new ArrayList<String>();
-        for (final FieldError error : ex.getBindingResult().getFieldErrors()) {
-            errors.add(error.getField() + ": " + error.getDefaultMessage());
-        }
-        for (final ObjectError error : ex.getBindingResult().getGlobalErrors()) {
-            errors.add(error.getObjectName() + ": " + error.getDefaultMessage());
-        }
+        List<String> errors = appendErrors(ex);
 
         return new UserExceptionResponse(
                 Instant.now(),
@@ -36,5 +31,16 @@ public class UserExceptionHandler {
                 errors,
                 req.getRequestURI()
         );
+    }
+
+    private static List<String> appendErrors(BindException bd) {
+        List<String> errors = new ArrayList<>();
+        for (FieldError fieldError : bd.getFieldErrors()) {
+            errors.add(fieldError.getField() + ": " + fieldError.getDefaultMessage());
+        }
+        for (ObjectError fieldError : bd.getGlobalErrors()) {
+            errors.add(fieldError.getObjectName() + ": " + fieldError.getDefaultMessage());
+        }
+        return errors;
     }
 }
