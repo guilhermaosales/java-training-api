@@ -13,16 +13,16 @@ public class UserForm implements Serializable  {
 
     private static final long serialVersionUID = 1L;
 
-    @NotBlank
-    @Size(min = 3, max = 45, message = "user name should have at least {min} characters and at maximum {max}.")
+    @NotBlank(message = "User name must not be blank")
+    @Size(min = 3, max = 45, message = "User name should have at least {min} characters and at maximum {max}.")
     private String name;
 
-    @NotBlank
-    @Email(message = "email must be filled correctly.")
+    @NotBlank(message = "User email must not be blank.")
+    @Email(message = "Email format invalid.")
     private String email;
 
-    @NotBlank
-    @CPF
+    @NotBlank(message = "User CPF must not be blank.")
+    @CPF(message = "Invalid CPF")
     private String cpf;
     private LocalDate birthDate;
 
