@@ -36,7 +36,7 @@ public class UserExceptionHandler {
 
     }
 
-    @ExceptionHandler(value = { NoHandlerFoundException.class })
+    @ExceptionHandler(value = { NoHandlerFoundException.class, NotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public UserExceptionResponse noHanderFoundException(Exception ex, HttpServletRequest req) {
 

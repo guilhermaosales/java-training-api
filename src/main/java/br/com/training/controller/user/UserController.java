@@ -1,7 +1,7 @@
-package br.com.training.controller;
+package br.com.training.controller.user;
 
-import br.com.training.dto.request.UserForm;
-import br.com.training.dto.response.UserResponse;
+import br.com.training.controller.user.dto.request.UserForm;
+import br.com.training.controller.user.dto.response.UserResponse;
 import br.com.training.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,9 +20,8 @@ public class UserController {
 	private UserService userService;
 
 	@PostMapping
-	public ResponseEntity<UserResponse> createUser(@RequestBody @Valid UserForm user)  {
-		UserResponse preparedUser = userService.save(user);
-		return new ResponseEntity<>(preparedUser, HttpStatus.CREATED);
+	public ResponseEntity<?> createUser(@RequestBody @Valid UserForm user)  {
+		return new ResponseEntity<>(userService.save(user), HttpStatus.CREATED);
 	}
 
 	@GetMapping (value = "/{cpf}")
@@ -47,12 +46,8 @@ public class UserController {
 	}
 
 	@DeleteMapping(value = "/{cpf}")
-	public ResponseEntity<Void> deleteUser(@PathVariable String cpf) {
-		UserResponse foundUser = userService.findByCpf(cpf);
-		if (foundUser != null) {
-			userService.deleteByCpf(cpf);
-			return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-		}
-		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+	public ResponseEntity<?> deleteUser(@PathVariable String cpf) {
+		userService.deleteByCpf(cpf);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 }
