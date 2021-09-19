@@ -1,7 +1,8 @@
 package br.com.training.service;
 
-import br.com.training.dto.request.UserForm;
-import br.com.training.dto.response.UserResponse;
+import br.com.training.controller.dto.request.UserForm;
+import br.com.training.controller.dto.response.UserResponse;
+import br.com.training.exception.UserNotFoundException;
 import br.com.training.model.User;
 import br.com.training.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,34 +20,42 @@ public class UserService {
 
     @Transactional
     public UserResponse save(UserForm user) {
-        return userRepository.save(user.convertToObj()).convertToDTO();
+        if(userExists(user.getCpf())) {
+            throw new UserNotFoundException("User already registered!");
+        }
+        return new UserResponse(userRepository.save(user.convertToObj()));
     }
 
     @Transactional
     public UserResponse findByCpf(String cpf) {
-        return userRepository.findByCpf(cpf).convertToDTO();
+        return new UserResponse(userRepository.findByCpf(cpf).orElseThrow(() -> new UserNotFoundException("User not found")));
     }
 
     @Transactional
     public List<UserResponse> listAll() {
         List<User> newUser = userRepository.findAll();
         return newUser.stream()
-                .map(User::convertToDTO)
+                .map(UserResponse::new)
                 .collect(Collectors.toList());
     }
 
     @Transactional
     public UserResponse update(UserForm user, String cpf) {
-        User newUser = userRepository.findByCpf(cpf);
+        User newUser = userRepository.findByCpf(cpf).orElseThrow(() -> new UserNotFoundException("User not found"));
         newUser.setName(user.getName());
         newUser.setCpf(user.getCpf());
         newUser.setEmail(user.getEmail());
         newUser.setBirthDate(user.getBirthDate());
-        return userRepository.save(newUser).convertToDTO();
+        return new UserResponse(userRepository.save(newUser));
     }
 
     @Transactional
     public void deleteByCpf(String cpf) {
+        findByCpf(cpf);
         userRepository.deleteByCpf(cpf);
+    }
+
+    public boolean userExists(String cpf) {
+        return userRepository.findByCpf(cpf).isPresent();
     }
 }
