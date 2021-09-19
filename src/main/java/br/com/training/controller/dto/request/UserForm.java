@@ -1,4 +1,4 @@
-package br.com.training.dto.request;
+package br.com.training.controller.dto.request;
 
 import br.com.training.model.User;
 import org.hibernate.validator.constraints.br.CPF;
