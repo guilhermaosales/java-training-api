@@ -1,7 +1,7 @@
 package br.com.training.model;
 
-import br.com.training.dto.request.UserForm;
-import br.com.training.dto.response.UserResponse;
+import br.com.training.controller.dto.request.UserForm;
+import br.com.training.controller.dto.response.UserResponse;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
@@ -49,10 +49,6 @@ public class User implements Serializable {
 		email = userForm.getEmail();
 		cpf = userForm.getCpf();
 		birthDate = userForm.getBirthDate();
-	}
-
-	public UserResponse convertToDTO() {
-		return new UserResponse(this);
 	}
 
 	@Component

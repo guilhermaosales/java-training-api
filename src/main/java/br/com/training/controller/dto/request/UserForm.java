@@ -1,35 +1,44 @@
-package br.com.training.dto.response;
+package br.com.training.controller.dto.request;
 
 import br.com.training.model.User;
+import org.hibernate.validator.constraints.br.CPF;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-public class UserResponse implements Serializable {
+public class UserForm implements Serializable  {
 
     private static final long serialVersionUID = 1L;
 
+    @NotBlank
+    @Size(min = 3, max = 45, message = "user name should have at least {min} characters and at maximum {max}.")
     private String name;
+
+    @NotBlank
+    @Email(message = "email must be filled correctly.")
     private String email;
+
+    @NotBlank
+    @CPF
     private String cpf;
     private LocalDate birthDate;
 
-    public UserResponse() {
+    public UserForm() {
         // NTD
     }
 
-    public UserResponse(String name, String email, String cpf, LocalDate birthDate) {
+    public UserForm(String name, String email, String cpf, LocalDate birthDate) {
         this.name = name;
         this.email = email;
         this.cpf = cpf;
         this.birthDate = birthDate;
     }
 
-    public UserResponse(User user) {
-        name = user.getName();
-        email = user.getEmail();
-        cpf =  user.getCpf();
-        birthDate = user.getBirthDate();
+    public User convertToObj() {
+        return new User(this);
     }
 
     public String getName() {
