@@ -1,5 +1,8 @@
 package br.com.training.exception;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.List;
@@ -44,13 +47,13 @@ public class UserExceptionResponse implements Serializable {
 
     @Override
     public String toString() {
-        return "UserExceptionResponse{" +
-                "timestamp=" + timestamp +
-                ", status='" + status + '\'' +
-                ", error='" + error + '\'' +
-                ", message=" + message +
-                ", path='" + path + '\'' +
-                '}';
+        ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.JSON_STYLE);
+        builder.append("timestamp", timestamp);
+        builder.append("status", status);
+        builder.append("error", error);
+        builder.append("message", message);
+        builder.append("path", path);
+        return builder.toString();
     }
 
     public static class Details {
@@ -73,10 +76,10 @@ public class UserExceptionResponse implements Serializable {
 
         @Override
         public String toString() {
-            return "Details{" +
-                    "field='" + field + '\'' +
-                    ", message='" + message + '\'' +
-                    '}';
+            ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.JSON_STYLE);
+            builder.append("field", field);
+            builder.append("message", message);
+            return builder.toString();
         }
     }
 }

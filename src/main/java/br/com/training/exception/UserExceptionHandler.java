@@ -21,7 +21,6 @@ public class UserExceptionHandler {
 
     private static BindingResult bindingResult;
 
-
     @ExceptionHandler(value =  { MethodArgumentNotValidException.class })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public UserExceptionResponse methodArgumentNotValid(MethodArgumentNotValidException ex, HttpServletRequest req) {
