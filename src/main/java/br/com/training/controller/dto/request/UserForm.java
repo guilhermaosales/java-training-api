@@ -37,7 +37,7 @@ public class UserForm implements Serializable  {
         this.birthDate = birthDate;
     }
 
-    public User convertToObj() {
+    public User toEntity() {
         return new User(this);
     }
 

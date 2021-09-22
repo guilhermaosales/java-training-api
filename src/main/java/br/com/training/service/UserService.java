@@ -23,7 +23,7 @@ public class UserService {
         if(userExists(user.getCpf())) {
             throw new UserNotFoundException("User already registered!");
         }
-        return new UserResponse(userRepository.save(user.convertToObj()));
+        return new UserResponse(userRepository.save(user.toEntity()));
     }
 
     @Transactional
