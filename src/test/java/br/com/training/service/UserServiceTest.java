@@ -32,7 +32,7 @@ class UserServiceTest {
     private UserService userService;
 
     @Test
-    void saveUserWhenTheyAreNotRegisteredYetShallPass() {
+    void shouldRegisterUser() {
         final UserForm userForm = new UserForm("Astolfo","astolfo@gmail.com","09801097957", LocalDate.parse("1994-12-12", DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 
         given(userRepository.findByCpf(userForm.getCpf())).willReturn(Optional.empty());
@@ -46,7 +46,7 @@ class UserServiceTest {
     }
 
     @Test
-    void saveUserWhenCPFExistsShallNotPass() {
+    void shouldNotRegisterUserWhenUserAlreadyExists() {
         final UserForm userForm = new UserForm("Astolfo","astolfo@gmail.com","09801097957", LocalDate.parse("1994-12-12", DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 
         given(userRepository.findByCpf(userForm.getCpf())).willReturn(Optional.of(userForm.toEntity()));
@@ -59,7 +59,7 @@ class UserServiceTest {
     }
 
     @Test
-    void getUserWhenUserExistsShallPass() {
+    void shouldReturnUserWhenTheyExist() {
         final UserForm userForm = new UserForm("Astolfo","astolfo@gmail.com","09801097957", LocalDate.parse("1994-12-12", DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 
         given(userRepository.findByCpf(userForm.getCpf())).willReturn(Optional.of(userForm.toEntity()));
@@ -70,7 +70,7 @@ class UserServiceTest {
     }
 
     @Test
-    void getUserWhenUserDoesNotExistsShallNotPass() {
+    void shouldReturnAExceptionWhenUserIsNotExistent() {
         final UserForm userForm = new UserForm("Astolfo","astolfo@gmail.com","09801097957", LocalDate.parse("1994-12-12", DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 
         given(userRepository.findByCpf(userForm.getCpf())).willReturn(Optional.empty());
@@ -82,7 +82,7 @@ class UserServiceTest {
     }
 
     @Test
-    void getUsersShallPass() {
+    void shouldReturnAllRegisteredUsers() {
         List<UserForm> users = new ArrayList<>();
         users.add(new UserForm("Alfredo", "alfredo@gmail.com", "40835104044", LocalDate.parse("1994-12-12", DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
         users.add(new UserForm("Pedrolino", "pedrolino@gmail.com", "82371582026", LocalDate.parse("1994-12-12", DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
@@ -98,7 +98,7 @@ class UserServiceTest {
     }
 
     @Test
-    void updateUserShallPass() {
+    void shouldUpdateUserData() {
         final UserForm userForm = new UserForm("Astolfo","astolfo@gmail.com","09801097957", LocalDate.parse("1994-12-12", DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 
         given(userRepository.findByCpf(userForm.getCpf())).willReturn(Optional.of(userForm.toEntity()));
@@ -112,7 +112,7 @@ class UserServiceTest {
     }
 
     @Test
-    void updateUserShallPassWhenCPFDoesNotMatch() {
+    void shouldReturnAExceptionWhenTryingToUpdateANonExistentUser() {
         final UserForm userForm = new UserForm("Astolfo","astolfo@gmail.com","09801097957", LocalDate.parse("1994-12-12", DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 
         given(userRepository.findByCpf(userForm.getCpf())).willReturn(Optional.empty());
@@ -123,12 +123,23 @@ class UserServiceTest {
     }
 
     @Test
-    void deleteUserShallPass() {
+    void shouldDeleteUser() {
         final UserForm userForm = new UserForm("Astolfo","astolfo@gmail.com","09801097957", LocalDate.parse("1994-12-12", DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         given(userRepository.findByCpf(userForm.getCpf())).willReturn(Optional.of(userForm.toEntity()));
         userService.deleteByCpf(userForm.getCpf());
 
         verify(userRepository, atLeastOnce()).deleteByCpf(userForm.getCpf());
+    }
+
+    @Test
+    void shouldThrowExceptionWhenTheresNoUserToBeDeleted() {
+        final UserForm userForm = new UserForm("Astolfo","astolfo@gmail.com","09801097957", LocalDate.parse("1994-12-12", DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+
+        given(userRepository.findByCpf(userForm.getCpf())).willReturn(Optional.empty());
+
+        assertThrows(UserNotFoundException.class, () -> {
+            userService.deleteByCpf(userForm.getCpf());
+        });
     }
 
 }

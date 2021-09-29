@@ -42,6 +42,7 @@ public class UserService {
     @Transactional
     public UserResponse update(UserForm user, String cpf) {
         User newUser = userRepository.findByCpf(cpf).orElseThrow(() -> new UserNotFoundException("User not found"));
+        newUser.setId(user.toEntity().getId());
         newUser.setName(user.getName());
         newUser.setCpf(user.getCpf());
         newUser.setEmail(user.getEmail());

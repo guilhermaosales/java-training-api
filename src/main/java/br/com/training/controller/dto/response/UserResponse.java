@@ -63,5 +63,4 @@ public class UserResponse implements Serializable {
     public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
     }
-
 }
