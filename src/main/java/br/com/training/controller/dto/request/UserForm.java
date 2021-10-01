@@ -1,6 +1,5 @@
 package br.com.training.controller.dto.request;
 
-import br.com.training.controller.dto.response.UserResponse;
 import br.com.training.model.User;
 import org.hibernate.validator.constraints.br.CPF;
 
