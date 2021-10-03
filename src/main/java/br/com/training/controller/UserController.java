@@ -36,8 +36,7 @@ public class UserController {
 
     @PutMapping(value = "/{cpf}")
 	public ResponseEntity<UserResponse> updateUser(@RequestBody @Valid UserForm user, @PathVariable String cpf) {
-		UserResponse foundUser = userService.update(user, cpf);
-		return new ResponseEntity<>(foundUser, HttpStatus.OK);
+		return new ResponseEntity<>(userService.update(user, cpf), HttpStatus.OK);
 	}
 
 	@DeleteMapping(value = "/{cpf}")
