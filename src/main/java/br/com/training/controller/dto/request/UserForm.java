@@ -1,6 +1,7 @@
 package br.com.training.controller.dto.request;
 
 import br.com.training.model.User;
+//import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.validator.constraints.br.CPF;
 
 import javax.validation.constraints.Email;
@@ -13,17 +14,31 @@ public class UserForm implements Serializable  {
 
     private static final long serialVersionUID = 1L;
 
+//    @ApiModelProperty(
+//            value = "User name",
+//            example = "Ragnar Lothbrok")
     @NotBlank
     @Size(min = 3, max = 45, message = "user name should have at least {min} characters and at maximum {max}.")
     private String name;
 
+//    @ApiModelProperty(
+//            value = "User email",
+//            example = "ragnar@vikings.com")
     @NotBlank
-    @Email(message = "email must be filled correctly.")
+    @Email(regexp=".*@.*\\..*", message = "email must be filled correctly.")
     private String email;
 
+//    @ApiModelProperty(
+//            value = "User cpf",
+//            example = "12345678910",
+//            notes = "Portuguese for Natural Persons Register" )
     @NotBlank
     @CPF
     private String cpf;
+
+//    @ApiModelProperty(
+//            value = "User birthdate",
+//            example = "21-12-1890")
     private LocalDate birthDate;
 
     public UserForm() {

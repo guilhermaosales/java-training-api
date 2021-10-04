@@ -1,7 +1,6 @@
 package br.com.training.model;
 
 import br.com.training.controller.dto.request.UserForm;
-import br.com.training.controller.dto.response.UserResponse;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +18,8 @@ public class User implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(nullable = false)
+	@Column(
+			nullable = false)
 	private String name;
 
 	@Column(nullable = false, unique = true)

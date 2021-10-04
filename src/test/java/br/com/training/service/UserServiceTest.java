@@ -2,7 +2,7 @@ package br.com.training.service;
 
 import br.com.training.controller.dto.request.UserForm;
 import br.com.training.controller.dto.response.UserResponse;
-import br.com.training.exception.UserNotFoundException;
+import br.com.training.exception.UserApiException;
 import br.com.training.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -51,7 +51,7 @@ class UserServiceTest {
 
         given(userRepository.findByCpf(userForm.getCpf())).willReturn(Optional.of(userForm.toEntity()));
 
-        assertThrows(UserNotFoundException.class, () -> {
+        assertThrows(UserApiException.class, () -> {
             userService.save(userForm);
         });
 
@@ -75,7 +75,7 @@ class UserServiceTest {
 
         given(userRepository.findByCpf(userForm.getCpf())).willReturn(Optional.empty());
 
-        assertThrows(UserNotFoundException.class, () -> {
+        assertThrows(UserApiException.class, () -> {
             userService.findByCpf(userForm.getCpf());
         });
 
@@ -117,7 +117,7 @@ class UserServiceTest {
 
         given(userRepository.findByCpf(userForm.getCpf())).willReturn(Optional.empty());
 
-        assertThrows(UserNotFoundException.class, () -> {
+        assertThrows(UserApiException.class, () -> {
             userService.update(userForm, userForm.getCpf());
         });
     }
@@ -137,7 +137,7 @@ class UserServiceTest {
 
         given(userRepository.findByCpf(userForm.getCpf())).willReturn(Optional.empty());
 
-        assertThrows(UserNotFoundException.class, () -> {
+        assertThrows(UserApiException.class, () -> {
             userService.deleteByCpf(userForm.getCpf());
         });
     }

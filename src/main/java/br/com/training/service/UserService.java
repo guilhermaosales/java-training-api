@@ -2,7 +2,7 @@ package br.com.training.service;
 
 import br.com.training.controller.dto.request.UserForm;
 import br.com.training.controller.dto.response.UserResponse;
-import br.com.training.exception.UserNotFoundException;
+import br.com.training.exception.UserApiException;
 import br.com.training.model.User;
 import br.com.training.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +21,14 @@ public class UserService {
     @Transactional
     public UserResponse save(UserForm user) {
         if(userExists(user.getCpf())) {
-            throw new UserNotFoundException("User already registered!");
+            throw new UserApiException("User already registered!");
         }
         return new UserResponse(userRepository.save(user.toEntity()));
     }
 
     @Transactional
     public UserResponse findByCpf(String cpf) {
-        return new UserResponse(userRepository.findByCpf(cpf).orElseThrow(() -> new UserNotFoundException("User not found")));
+        return new UserResponse(userRepository.findByCpf(cpf).orElseThrow(() -> new UserApiException("User not found")));
     }
 
     @Transactional
@@ -41,7 +41,7 @@ public class UserService {
 
     @Transactional
     public UserResponse update(UserForm user, String cpf) {
-        User newUser = userRepository.findByCpf(cpf).orElseThrow(() -> new UserNotFoundException("User not found"));
+        User newUser = userRepository.findByCpf(cpf).orElseThrow(() -> new UserApiException("User not found"));
         newUser.setId(user.toEntity().getId());
         newUser.setName(user.getName());
         newUser.setCpf(user.getCpf());

@@ -23,9 +23,9 @@ public class UserExceptionHandler {
 
     @ExceptionHandler(value =  { MethodArgumentNotValidException.class })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public UserExceptionResponse methodArgumentNotValid(MethodArgumentNotValidException ex, HttpServletRequest req) {
+    public UserErrorDetail methodArgumentNotValid(MethodArgumentNotValidException ex, HttpServletRequest req) {
 
-        return new UserExceptionResponse(
+        return new UserErrorDetail(
                 Instant.now(),
                 HttpStatus.BAD_REQUEST.value(),
                 HttpStatus.BAD_REQUEST.getReasonPhrase(),
@@ -37,9 +37,9 @@ public class UserExceptionHandler {
 
     @ExceptionHandler(value = { NoHandlerFoundException.class })
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public UserExceptionResponse noHanderFoundException(Exception ex, HttpServletRequest req) {
+    public UserErrorDetail noHanderFoundException(Exception ex, HttpServletRequest req) {
 
-        return new UserExceptionResponse(
+        return new UserErrorDetail(
                 Instant.now(),
                 HttpStatus.NOT_FOUND.value(),
                 HttpStatus.NOT_FOUND.getReasonPhrase(),
@@ -51,9 +51,9 @@ public class UserExceptionHandler {
 
     @ExceptionHandler(value = { MethodNotAllowedException.class })
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
-    public UserExceptionResponse methodNotAllowedException(Exception ex, HttpServletRequest req) {
+    public UserErrorDetail methodNotAllowedException(Exception ex, HttpServletRequest req) {
 
-        return new UserExceptionResponse(
+        return new UserErrorDetail(
                 Instant.now(),
                 HttpStatus.METHOD_NOT_ALLOWED.value(),
                 HttpStatus.METHOD_NOT_ALLOWED.getReasonPhrase(),
@@ -64,15 +64,15 @@ public class UserExceptionHandler {
     }
 
 
-    private static List<UserExceptionResponse.Details> appendErrors(BindingResult bd) {
-        List<UserExceptionResponse.Details> details = new ArrayList<>();
+    private static List<UserErrorDetail.Details> appendErrors(BindingResult bd) {
+        List<UserErrorDetail.Details> details = new ArrayList<>();
         for (FieldError fe : bd.getFieldErrors()) {
-            details.add(new UserExceptionResponse.Details(
+            details.add(new UserErrorDetail.Details(
                     fe.getField(),
                     fe.getDefaultMessage()));
         }
         for (ObjectError oe : bd.getGlobalErrors()) {
-            details.add(new UserExceptionResponse.Details(
+            details.add(new UserErrorDetail.Details(
                     oe.getObjectName(),
                     oe.getDefaultMessage()));
         }
