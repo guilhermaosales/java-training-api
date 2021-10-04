@@ -1,8 +1,6 @@
 package br.com.training.model;
 
 import br.com.training.controller.dto.request.UserForm;
-import br.com.training.controller.dto.response.UserResponse;
-import io.swagger.annotations.ApiModelProperty;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
@@ -16,24 +14,20 @@ public class User implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	@ApiModelProperty(value = "User unique code")
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ApiModelProperty(value = "User name")
-	@Column(nullable = false)
+	@Column(
+			nullable = false)
 	private String name;
 
-	@ApiModelProperty(value = "User email")
 	@Column(nullable = false, unique = true)
 	private String email;
 
-	@ApiModelProperty(value = "User cpf")
 	@Column(nullable = false, unique = true)
 	private String cpf;
 
-	@ApiModelProperty(value = "User birthdate")
 	@Column(nullable = false)
 	private LocalDate birthDate;
 

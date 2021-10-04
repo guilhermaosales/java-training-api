@@ -2,12 +2,10 @@ package br.com.training.controller;
 
 import br.com.training.controller.dto.request.UserForm;
 import br.com.training.controller.dto.response.UserResponse;
-import br.com.training.exception.UserExceptionResponse;
-import br.com.training.exception.UserNotFoundException;
+import br.com.training.exception.UserApiException;
 import br.com.training.model.User;
 import br.com.training.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +14,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -97,7 +94,7 @@ class UserControllerTest {
     void shouldNotCreateUserAndThrowExceptionIfAlreadyExists() throws Exception {
         final UserForm userForm = new UserForm("Astolfo","astolfo@gmail.com","09801097957", LocalDate.parse("1994-12-12", DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 
-        when(userService.save(any(UserForm.class))).thenThrow(UserNotFoundException.class);
+        when(userService.save(any(UserForm.class))).thenThrow(UserApiException.class);
 
     }
     @Test

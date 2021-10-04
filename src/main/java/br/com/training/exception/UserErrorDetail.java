@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.List;
 
-public class UserExceptionResponse implements Serializable {
+public class UserErrorDetail implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -17,7 +17,7 @@ public class UserExceptionResponse implements Serializable {
     private final List<Details> message;
     private final String path;
 
-    public UserExceptionResponse(Instant timestamp, int status, String error, List<Details> message, String path) {
+    public UserErrorDetail(Instant timestamp, int status, String error, List<Details> message, String path) {
         this.timestamp = timestamp;
         this.status = status;
         this.error = error;
